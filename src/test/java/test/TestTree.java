@@ -13,9 +13,9 @@ public class TestTree {
         Tech eng3 = new Tech(4000, "Epstein Drive");
 
         TechBranch engineBranch = new TechBranch.Builder()
-                .firstTech(eng1)
-                .nextTech(eng2)
-                .lastTech(eng3)
+                .addTech(eng1)
+                .addTech(eng2, eng1)
+                .addTech(eng3, eng2)
                 .build();
 
         Tech tech1 = new Tech(10, "Wind Turbine");
@@ -25,12 +25,11 @@ public class TestTree {
         Tech tech5 = new Tech(10000, "Dyson Sphere");
 
         TechBranch powerBranch = new TechBranch.Builder()
-                .firstTech(tech1)
-                .nextTech(tech2)
-                .nextTech(tech3)
-                .branchesInto(engineBranch)
-                .nextTech(tech4)
-                .lastTech(tech5)
+                .addTech(tech1)
+                .addTech(tech2, tech1)
+                .addTech(tech3, tech2)
+                .addTech(tech4, tech3)
+                .addTech(tech5, tech4)
                 .build();
 
         Tech stone = new Tech(5, "Stone Ore");
@@ -38,10 +37,9 @@ public class TestTree {
         Tech iron = new Tech(20, "Iron Ore");
 
         TechBranch mineralBranch = new TechBranch.Builder()
-                .firstTech(stone)
-                .nextTech(coal)
-                .lastTech(iron)
-                .branchesInto(powerBranch)
+                .addTech(stone)
+                .addTech(coal, stone)
+                .addTech(iron, coal, eng1)
                 .build();
 
         TechTree techTree = new TechTree(mineralBranch);

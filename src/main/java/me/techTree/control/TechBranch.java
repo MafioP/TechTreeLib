@@ -1,6 +1,7 @@
 package me.techTree.control;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TechBranch {
     public static class Builder {
@@ -9,36 +10,15 @@ public class TechBranch {
         public Builder () {
             branch = new ArrayList<>();
         }
-        public Builder firstTech(Tech first) {
-            first.setRequires(null);
-            branch.add(first);
-            return this;
-        }
-        public Builder nextTech(Tech next) {
-            branch.get(branch.size() - 1).setUnlocks(next);
-            branch.add(next);
 
-            if (branch.size() > 1) {
-                branch.get(branch.size() - 1).setRequires(branch.get(branch.size() - 2));
-            }
-            return this;
-        }
-
-        public Builder lastTech(Tech last) {
-            branch.get(branch.size() - 1).setUnlocks(last);
-            last.setRequires(branch.get(branch.size() - 1));
-            last.setUnlocks(null);
-            branch.add(last);
-            return this;
-        }
-
-        public Builder branchesInto(TechBranch newBranch) {
-            newBranch.getTech(0).setRequires(branch.get(branch.size() - 1));
-             branch.get(branch.size()-1).setUnlocks(newBranch.getTech(0));
+        public Builder addTech(Tech tech, Tech ...requires) {
+            tech.addRequires(new ArrayList<>(Arrays.asList(requires)));
+            branch.add(tech);
             return this;
         }
 
         public TechBranch build() {
+            branch.forEach(e -> e.getRequires().forEach(e1 -> e1.addUnlocks(e)));
             TechBranch techBranch = new TechBranch();
             techBranch.branch = branch;
 
@@ -62,6 +42,10 @@ public class TechBranch {
 
     public Tech getTech(int index) {
         return branch.get(index);
+    }
+
+    public ArrayList<Tech> getTechs() {
+        return new ArrayList<>(branch);
     }
 
     @Override
